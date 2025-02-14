@@ -7,7 +7,7 @@ using Ninject;
 using Moq;
 using GadgetHub.Domain.Abstract;
 using GadgetHub.Domain.Entities;
-//using GadgetHub.Domain.Concrete;
+using GadgetHub.Domain.Concrete;
 
 namespace GadgetHub.WebUI.Infrastructure
 {
@@ -34,17 +34,17 @@ namespace GadgetHub.WebUI.Infrastructure
 
 		private void AddBinding()
 		{
-			Mock<IGadgetRepository> myMock = new Mock<IGadgetRepository>();
-			myMock.Setup(m => m.Gadgets).Returns(new List<Gadgets>
-			{
-				new Gadgets { Name = "IPhone", Brand = "Apple", Price = 150, Description = "This is a phone made by Apple" },
-				new Gadgets{ Name = "Computer", Brand = "Microsoft", Price = 300, Category = "Electronics" },
-				new Gadgets{ Name = "Fitbit", Price = 95, Category = "Electronic Watches" }
-			});
+			//Mock<IGadgetRepository> myMock = new Mock<IGadgetRepository>();
+			//myMock.Setup(m => m.Gadgets).Returns(new List<Gadgets>
+			//{
+			//	new Gadgets { Name = "IPhone", Brand = "Apple", Price = 150, Description = "This is a phone made by Apple" },
+			//	new Gadgets{ Name = "Computer", Brand = "Microsoft", Price = 300, Category = "Electronics" },
+			//	new Gadgets{ Name = "Fitbit", Price = 95, Category = "Electronic Watches" }
+			//});
 
-			mykernel.Bind<IGadgetRepository>().ToConstant(myMock.Object);
+			//mykernel.Bind<IGadgetRepository>().ToConstant(myMock.Object);
 
-			//mykernel.Bind<IProductsRepository>().To<EFProductRepository>();
+			mykernel.Bind<IGadgetRepository>().To<EFGadgetRepository>();
 		}
 	}
 }
