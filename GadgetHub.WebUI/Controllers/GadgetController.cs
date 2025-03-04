@@ -17,12 +17,14 @@ namespace GadgetHub.WebUI.Controllers
 			this.myrepository = gadgetRepository;
 		}
 
-		public int PageSize = 4;
-		public ViewResult List(int page = 1)
+		public int PageSize = 2;
+		public ViewResult List(string category, int page = 1)
 		{
 			ProductsListViewModel model = new ProductsListViewModel
 			{
-				Gadgets = myrepository.Gadgets.OrderBy(p => p.GadgetId)
+				Gadgets = myrepository.Gadgets
+				.Where(p => category == null || p.Category == category)
+				.OrderBy(p => p.GadgetId)
 				.Skip((page - 1) * PageSize)
 				.Take(PageSize),
 
@@ -30,8 +32,11 @@ namespace GadgetHub.WebUI.Controllers
 				{
 					CurrentPage = page,
 					ItemsPerPage = PageSize,
-					TotalItems = myrepository.Gadgets.Count()
-				}
+					// TotalItems = myrepository.Gadgets.Count()
+					TotalItems = category == null ?
+					myrepository.Gadgets.Count() : myrepository.Gadgets.Where(e => e.Category == category).Count()
+				},
+				CurrentCategory = category
 			};
 
 			return View(model);

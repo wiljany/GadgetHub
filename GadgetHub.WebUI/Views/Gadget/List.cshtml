@@ -7,16 +7,17 @@
 
 @foreach (var p in Model.Gadgets)
 {
-	<div>
-		<h3>Name = @p.Name</h3>
-		<h3>Brand = @p.Brand</h3>
-		<h4>Price = @p.Price.ToString("c")</h4>
-		<h4>Description = @p.Description</h4>
-		<h4>Category = @p.Category</h4>
-		@*<h4>=========================================</h4>*@
-	</div>
+	@Html.Partial("GadgetSummary", p)
+	@*<div class="card p-3 bg-light text-dark mb-2 float-end">
+		<h3>
+			<strong>@p.Name</strong>
+			<span class="badge bg-success float-end">Price = @p.Price.ToString("c")</span>
+		</h3>
+		<span class="lead">@p.Brand</span>
+		<span class="lead">@p.Description</span>
+	</div>*@
 }
 
-<div>
-	@Html.PageLinks(Model.PagingInfo, x => Url.Action("List", new { Page = x }))
+<div class="btn-group float-end">
+	@Html.PageLinks(Model.PagingInfo, x => Url.Action("List", new { Page = x, category = Model.CurrentCategory }))
 </div>
