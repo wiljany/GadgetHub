@@ -47,4 +47,6 @@
 	<a class="btn btn-primary" href="@Model.ReturnUrl">
 		Continue Shopping
 	</a>
+	@Html.ActionLink("Checkout now", "checkout", null,
+						new { @class = "btn btn-success" })
 </div>
