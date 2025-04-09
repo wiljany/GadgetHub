@@ -12,10 +12,12 @@ namespace GadgetHub.WebUI.Controllers
     public class CartController : Controller
     {
         private IGadgetRepository repository;
+        private IOrderProcessor orderProcessor;
 
-        public CartController(IGadgetRepository repo)
+        public CartController(IGadgetRepository repo, IOrderProcessor processor)
         {
             this.repository = repo;
+            orderProcessor = processor;
         }
         private Cart GetCart()
         {
@@ -68,6 +70,26 @@ namespace GadgetHub.WebUI.Controllers
         public ViewResult Checkout()
         {
             return View(new ShippingDetails());
+        }
+
+        [HttpPost]
+        public ViewResult Checkout(Cart cart, ShippingDetails shippingDetails)
+        {
+            if (cart.Lines.Count() == 0)
+            {
+                ModelState.AddModelError("", "Sorry, your cart is empty");
+            }
+
+            if (ModelState.IsValid)
+            {
+                orderProcessor.processOrder(cart, shippingDetails);
+                cart.Clear();
+                return View("Completed", shippingDetails);
+            }
+            else
+            {
+                return View(shippingDetails);
+            }
         }
 	}
 }
