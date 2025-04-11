@@ -15,5 +15,37 @@ namespace GadgetHub.Domain.Concrete
 		{
 			get { return context.Gadgets; }
 		}
+
+		void IGadgetRepository.Savegadget(Gadgets gadgets)
+		{
+			if (gadgets.GadgetId == 0)
+			{
+				context.Gadgets.Add(gadgets);
+			}
+			else
+			{
+				Gadgets dbEntry = context.Gadgets.Find(gadgets.GadgetId);
+				if (dbEntry != null)
+				{
+					dbEntry.Name = gadgets.Name;
+					dbEntry.Description = gadgets.Description;
+					dbEntry.Category = gadgets.Category;
+					dbEntry.Brand = gadgets.Brand;
+					dbEntry.Price = gadgets.Price;
+				}
+			}
+			context.SaveChanges();
+		}
+
+		public Gadgets DeleteGadget(int gadgetId)
+		{
+			Gadgets dbEntry = context.Gadgets.Find(gadgetId);
+			if (dbEntry != null)
+			{
+				context.Gadgets.Remove(dbEntry);
+				context.SaveChanges();
+			}
+			return dbEntry;
+		}
 	}
 }

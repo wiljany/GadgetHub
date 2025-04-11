@@ -10,5 +10,8 @@ namespace GadgetHub.Domain.Abstract
 	public interface IGadgetRepository
 	{
 		IEnumerable<Gadgets> Gadgets { get; }
+		void Savegadget(Gadgets gadgets);
+
+		Gadgets DeleteGadget(int gadgetId);
 	}
 }
