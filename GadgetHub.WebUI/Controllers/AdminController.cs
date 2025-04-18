@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -8,6 +9,7 @@ using GadgetHub.Domain.Entities;
 
 namespace GadgetHub.WebUI.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         private IGadgetRepository repository;
@@ -27,11 +29,18 @@ namespace GadgetHub.WebUI.Controllers
             return View(gadgets);
         }
         [HttpPost]
-        public ActionResult Edit(Gadgets gadgets)
+        public ActionResult Edit(Gadgets gadgets, HttpPostedFileBase image=null)
         {
             if (ModelState.IsValid)
             {
-                repository.Savegadget(gadgets);
+				if (image != null)
+				{
+					gadgets.ImageMimeType = image.ContentType;
+					gadgets.ImageData = new byte[image.ContentLength];
+					image.InputStream.Read(gadgets.ImageData, 0, image.ContentLength);
+				}
+
+				repository.Savegadget(gadgets);
                 TempData["message"] = string.Format("{0} has been saved", gadgets.Name);
                 return RedirectToAction("Index");
             }

@@ -23,34 +23,65 @@
 			<h2>@operationText</h2>
 		</div>
 		<div class="card-body">
-		
 
-			@using (Html.BeginForm("Edit", "Admin"))
+			@using (Html.BeginForm("Edit", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
 			{
 				<div class="card-body">
 					@Html.HiddenFor(m => m.GadgetId)
 
 					@foreach (var property in ViewData.ModelMetadata.Properties)
 					{
-						if (property.PropertyName != "GadgetId")
+						switch (property.PropertyName)
 						{
-							<div class="mb-3">
-								<label class="form-label">
-									@(property.DisplayName ?? property.PropertyName)
-								</label>
-								@if (property.PropertyName == "Description")
-								{
-									@Html.TextArea(property.PropertyName, null, new { @class = "form-control", rows = 5 })
-								}
-								else
-								{
-									@Html.TextBox(property.PropertyName, null, new { @class = "form-control" })
-								}
+							case "GadgetId":
+							case "ImageData":
+							case "ImageMimeType":
+								break;
 
-								@Html.ValidationMessage(property.PropertyName)
-							</div>
+							default:
+
+								<div class="mb-3">
+									<label class="form-label">
+										@(property.DisplayName ?? property.PropertyName)
+									</label>
+									@if (property.PropertyName == "Description")
+									{
+										@Html.TextArea(property.PropertyName, null, new { @class = "form-control", rows = 5 })
+									}
+									else
+									{
+										@Html.TextBox(property.PropertyName, null, new { @class = "form-control" })
+									}
+
+									@Html.ValidationMessage(property.PropertyName)
+
+								</div>
+								break;
 						}
 					}
+
+					<div class="mb-3">
+						<label class="form-label">Image</label>
+						<div style="position:relative;">
+							<a class="btn btn-secondary" href="javascript:;">
+								Choose File
+								<input type="file" name="Image" size="40"
+									   style="position:absolute; z-index:2; top:0;
+						left:0; opacity:0;
+						background-color:transparent; color:transparent;"
+									   onchange='$("#upload-file-info").html($(this).val());' />
+							</a>
+							<span class="form-label labile-info" id="upload-file-info"></span>
+						</div>
+						@if (Model.ImageData == null)
+						{
+							<div class="form-text">No Image</div>
+						}
+						else
+						{
+							<img class="img-thumbnail" width="150" height="150" src='@Url.Action("GetImage", "Gadget", new { Model.GadgetId })' />
+						}
+					</div>
 				</div>
 				<div class="card-footer">
 					<input type="submit" value="Save" class="btn btn-success" />

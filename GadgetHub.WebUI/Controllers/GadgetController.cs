@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using GadgetHub.Domain.Abstract;
 using GadgetHub.WebUI.Models;
+using GadgetHub.Domain.Entities;
 
 namespace GadgetHub.WebUI.Controllers
 {
@@ -43,6 +44,21 @@ namespace GadgetHub.WebUI.Controllers
 			//return View(myrepository.Gadgets.OrderBy(p => p.GadgetId)
 			//	.Skip((page -1) * PageSize)
 			//	.Take(PageSize));
+		}
+
+		public FileContentResult GetImage(int gadgetId)
+		{
+			Gadgets gad = myrepository.Gadgets.FirstOrDefault(g => g.GadgetId == gadgetId);
+
+			if (gad != null)
+			{
+				return File(gad.ImageData, gad.ImageMimeType);
+			}
+
+			else
+			{
+				return null;
+			}
 		}
 	}
 }
